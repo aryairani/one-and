@@ -1,4 +1,4 @@
-lazy val root = project.in(file(".")).aggregate(scalaz)
+lazy val root = project.in(file(".")).aggregate(scalaz).settings(publishArtifact := false)
 
 lazy val scalaz = project
   .settings(commonSettings: _*)
@@ -15,8 +15,13 @@ lazy val scalaz = project
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
+  version := "0.1",
   organization := "net.arya",
   scalacOptions ++= Seq("-feature","-language:higherKinds"),
+  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.7.1")
+) ++ publishSettings
+
+lazy val publishSettings = Seq(
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"

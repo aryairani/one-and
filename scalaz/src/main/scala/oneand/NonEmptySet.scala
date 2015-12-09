@@ -1,6 +1,7 @@
 package oneand
 
-import scalaz.{Foldable1, Monad, Order, NonEmptyList, Semigroup}
+import scalaz._
+import scalaz.syntax.foldable._
 
 
 /** An immutable Set with at least one element */
@@ -21,8 +22,8 @@ class NonEmptySet[A] private(raw: Set[A]) {
   def +(a: A): NonEmptySet[A] =
     new NonEmptySet(raw + a)
 
-  def ++(that: NonEmptySet[A]): NonEmptySet[A] = new NonEmptySet(this.toSet ++ that.toSet)
-  def ++(that: Set[A]): NonEmptySet[A] = new NonEmptySet(this.toSet ++ that)
+  def ++[F[_]: Foldable](that: F[A]): NonEmptySet[A] = this ++ that.toSet
+  def ++(that: scala.collection.GenTraversableOnce[A]): NonEmptySet[A] = new NonEmptySet(this.toSet ++ that)
 
   def map[B](f: A => B): NonEmptySet[B] = new NonEmptySet(raw map f)
 
@@ -50,9 +51,10 @@ object NonEmptySet {
   implicit def semigroup[A]: Semigroup[NonEmptySet[A]] =
     Semigroup.instance[NonEmptySet[A]] { (a, b) => a ++ b }
 
-  // delegate to the instance for Set, which does crazy stuff to make use of Order
-  implicit def order[A: Order] =
-    Order[Set[A]](scalaz.std.set.setOrder).contramap[NonEmptySet[A]](_.toSet)
+  // natural equals for now
+  implicit def equal[A]: Equal[NonEmptySet[A]] = Equal.equalA[Set[A]].contramap(_.toSet)
+  implicit def show[A](implicit A: Show[A]): Show[NonEmptySet[A]] =
+    Show.show(set => Cord("NonEmptySet(", Cord.mkCord(",", set.toList.map(A.show): _*), ")"))
 
   implicit def nonEmptySetInstance: Monad[NonEmptySet] with Foldable1[NonEmptySet] =
     new Monad[NonEmptySet] with Foldable1[NonEmptySet] {

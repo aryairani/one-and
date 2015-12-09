@@ -13,6 +13,7 @@ class NonEmptyMapSpec extends Specification with ScalaCheck {
 
   def is = s2"""
     Semigroup laws ${ ScalazProperties.semigroup.laws[NonEmptyMap[Int, Int]] }
+    Foldable1 laws ${ ScalazProperties.foldable1.laws[NonEmptyMap[Int, ?]] }
     removing the only element leaves nothing ${ prop((k: Int, v: Int) => (NonEmptyMap(k -> v) - k).isEmpty) }
     removing 2nd elements leaves something ${
     prop((k1: Int, v1: Int, k2: Int, v2: Int) =>
