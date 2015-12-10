@@ -1,7 +1,7 @@
 package oneand
 
 import scalaz._
-import scalaz.syntax.foldable._
+import scalaz.syntax.foldable1._
 
 
 /** An immutable Set with at least one element */
@@ -41,12 +41,15 @@ class NonEmptySet[A] private(raw: Set[A]) {
   def toList: List[A] = raw.toList
   def toNel: NonEmptyList[A] = NonEmptyList(raw.head, raw.tail.toSeq: _*)
 
-  override def toString: String = raw.mkString("NonEmptySet(",",",")")
+  override def toString: String = raw.mkString("NonEmptySet(", ",", ")")
 }
 
 object NonEmptySet {
   def apply[A](one: A, others: A*): NonEmptySet[A] =
     new NonEmptySet[A](Set(others: _*) + one)
+
+  def apply[F[_]:Foldable1, A](fa: F[A]): NonEmptySet[A] =
+    fa.foldMapLeft1[NonEmptySet[A]](apply(_))(_ + _)
 
   implicit def semigroup[A]: Semigroup[NonEmptySet[A]] =
     Semigroup.instance[NonEmptySet[A]] { (a, b) => a ++ b }

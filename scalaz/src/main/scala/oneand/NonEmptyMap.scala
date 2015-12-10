@@ -28,6 +28,7 @@ class NonEmptyMap[K,V] private(raw: Map[K,V]) {
 
   def forall(p: ((K, V)) => Boolean) = raw.forall(p)
   def exists(p: ((K, V)) => Boolean) = raw.exists(p)
+  def filter(p: ((K, V)) => Boolean) = raw.filter(p)
 
   def foldLeft[B](z: B)(f: (B, (K, V)) => B): B = raw.foldLeft(z)(f)
   def foldMap1[B](f: ((K,V)) => B)(implicit B: Semigroup[B]): B =
