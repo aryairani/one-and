@@ -52,6 +52,9 @@ object NonEmptyMap {
   def apply[K, V](one: (K, V), thats: (K, V)*): NonEmptyMap[K, V] =
     new NonEmptyMap[K, V](Map(thats: _*) + one)
 
+  def apply[F[_]:Foldable1, K, V](fa: F[(K,V)]): NonEmptyMap[K,V] =
+    fa.foldMapLeft1[NonEmptyMap[K, V]](apply(_))(_ + _)
+
   // natural instance
   implicit def equal[K, V] = Equal.equalA[Map[K, V]].contramap[NonEmptyMap[K,V]](_.toMap)
 
