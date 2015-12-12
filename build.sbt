@@ -1,4 +1,4 @@
-lazy val root = project.in(file(".")).aggregate(scalaz).settings(publishArtifact := false)
+lazy val root = project.in(file(".")).aggregate(scalaz, scalazArgonaut).settings(publishArtifact := false)
 
 lazy val scalaz = project
   .settings(commonSettings: _*)
@@ -13,9 +13,17 @@ lazy val scalaz = project
     scalacOptions in Test ++= Seq("-Yrangepos")
   )
 
+lazy val scalazArgonaut = project
+  .dependsOn(scalaz)
+  .settings(commonSettings: _*)
+  .settings(name := "oneand-scalaz-argonaut")
+  .settings(
+    libraryDependencies += "io.argonaut" %% "argonaut" % "6.1"
+  )
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
-  version := "0.1",
+//  version := "0.1",
   organization := "net.arya",
   scalacOptions ++= Seq("-feature","-language:higherKinds"),
   addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.7.1")
