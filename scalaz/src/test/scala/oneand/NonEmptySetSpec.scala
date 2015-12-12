@@ -1,11 +1,14 @@
-package oneand
+package oneand.scalaz
+
+import oneand.NonEmptySet
+import oneand.scalaz.foo.NonEmptySetOps
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.{ScalaCheck, Specification}
 
-import scalaz.scalacheck.ScalazProperties
-import scalaz.std.AllInstances._
-import scalaz.syntax.std.list._
+import _root_.scalaz.scalacheck.ScalazProperties
+import _root_.scalaz.std.AllInstances._
+import _root_.scalaz.syntax.std.list._
 
 class NonEmptySetSpec extends Specification with ScalaCheck {
   import NonEmptySetSpec.arbitraryNonEmptySet

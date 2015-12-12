@@ -1,6 +1,13 @@
-lazy val root = project.in(file(".")).aggregate(scalaz, scalazArgonaut).settings(publishArtifact := false)
+lazy val root = project.in(file(".")).aggregate(core, scalaz, argonaut).settings(publishArtifact := false)
+
+lazy val core = project
+  .settings(commonSettings: _*)
+  .settings(name := "oneand-core")
+
+//lazy val cats = project
 
 lazy val scalaz = project
+  .dependsOn(core)
   .settings(commonSettings: _*)
   .settings(name := "oneand-scalaz")
   .settings(
@@ -13,10 +20,10 @@ lazy val scalaz = project
     scalacOptions in Test ++= Seq("-Yrangepos")
   )
 
-lazy val scalazArgonaut = project
+lazy val argonaut = project
   .dependsOn(scalaz)
   .settings(commonSettings: _*)
-  .settings(name := "oneand-scalaz-argonaut")
+  .settings(name := "oneand-argonaut")
   .settings(
     libraryDependencies += "io.argonaut" %% "argonaut" % "6.1"
   )

@@ -1,12 +1,14 @@
-package oneand
+package oneand.scalaz
+
+import oneand.NonEmptyMap
+import oneand.scalaz.foo._
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.{ScalaCheck, Specification}
 
-import scalaz.{Foldable1, NonEmptyList}
-import scalaz.scalacheck.ScalazProperties
-import scalaz.std.AllInstances._
-import scalaz.syntax.std.list._
+import _root_.scalaz._
+import _root_.scalaz.Scalaz._
+import _root_.scalaz.scalacheck.ScalazProperties
 
 class NonEmptyMapSpec extends Specification with ScalaCheck {
   import NonEmptyMapSpec.arbitraryNonEmptyMap
