@@ -1,7 +1,7 @@
 package oneand.scalaz
 
 import oneand.NonEmptyMap
-import oneand.scalaz.foo._
+import oneand.scalaz.syntax._
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.{ScalaCheck, Specification}

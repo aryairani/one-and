@@ -1,7 +1,7 @@
 package oneand.scalaz
 
 import oneand.NonEmptyMap
-import oneand.scalaz.foo._
+import oneand.scalaz.syntax._
 
 import _root_.scalaz._
 import _root_.scalaz.Scalaz._

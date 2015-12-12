@@ -1,7 +1,7 @@
 package oneand.scalaz
 
 import oneand.NonEmptySet
-import oneand.scalaz.foo.NonEmptySetOps
+import oneand.scalaz.syntax.NonEmptySetOps
 
 import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.{ScalaCheck, Specification}
