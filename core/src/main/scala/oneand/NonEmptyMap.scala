@@ -5,6 +5,7 @@ class NonEmptyMap[K,V] private[oneand](raw: Map[K,V]) {
   assert(raw.nonEmpty)
 
   def get(k: K): Option[V] = raw.get(k)
+  def head: (K,V) = raw.head
   def size: Int = raw.size
 
   /** Remove an element from the map. Returns None if the removed element was the only one. */

@@ -1,4 +1,8 @@
-lazy val root = project.in(file(".")).aggregate(core, scalaz, argonaut).settings(publishArtifact := false)
+lazy val root = project
+  .in(file("."))
+  .aggregate(core, scalaz, argonaut)
+  .settings(publishArtifact := false)
+  .settings(publishSettings: _*)
 
 lazy val core = project
   .settings(commonSettings: _*)
@@ -7,17 +11,13 @@ lazy val core = project
 //lazy val cats = project
 
 lazy val scalaz = project
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings: _*)
   .settings(name := "oneand-scalaz")
   .settings(
     // scalaz
     libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.5",
-    libraryDependencies += "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.5" % "test",
-    // specs2
-    libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "3.6.5" % "test"),
-    libraryDependencies ++= Seq("org.specs2" %% "specs2-scalacheck" % "3.6.5" % "test"),
-    scalacOptions in Test ++= Seq("-Yrangepos")
+    libraryDependencies += "org.scalaz" %% "scalaz-scalacheck-binding" % "7.1.5" % "test"
   )
 
 lazy val argonaut = project
@@ -28,13 +28,19 @@ lazy val argonaut = project
     libraryDependencies += "io.argonaut" %% "argonaut" % "6.1"
   )
 
+def specs2 = Seq(
+  libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "3.6.5" % "test"),
+  libraryDependencies ++= Seq("org.specs2" %% "specs2-scalacheck" % "3.6.5" % "test"),
+  scalacOptions in Test ++= Seq("-Yrangepos")
+)
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
-//  version := "0.1",
+  version := "0.1",
   organization := "net.arya",
   scalacOptions ++= Seq("-feature","-language:higherKinds"),
   addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.7.1")
-) ++ publishSettings
+) ++ publishSettings ++ specs2
 
 lazy val publishSettings = Seq(
   publishMavenStyle := true,

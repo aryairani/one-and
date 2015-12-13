@@ -7,6 +7,7 @@ class NonEmptySet[A] private[oneand](raw: Set[A]) {
   def contains(a: A): Boolean = raw.contains(a)
 
   def size: Int = raw.size
+  def head: A = raw.head
 
   /** Remove an element from the set. Returns None if the removed element was the only one. */
   def -(k: A): Option[NonEmptySet[A]] =
