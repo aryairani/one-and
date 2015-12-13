@@ -1,0 +1,12 @@
+language: scala
+
+script:
+  - sbt clean coverage test coverageReport
+
+after_success:
+  - pip install --user codecov && codecov
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt

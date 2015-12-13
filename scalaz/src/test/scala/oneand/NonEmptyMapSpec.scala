@@ -34,8 +34,12 @@ class NonEmptyMapSpec extends Specification with ScalaCheck {
     ++(Map) ${ prop((a: NonEmptyMap[Int,String], b: Map[Int,String]) => (a ++ b).toMap === (a.toMap ++ b)) }
     .toNel consistent with .toList.toNel ${ prop((a: NonEmptyMap[Int,String]) => a.toNel === a.toList.toNel.get) }
     .mapValues.toMap consistent with .toMap.mapValues ${
-    prop((a: NonEmptyMap[Int,Int]) => a.mapValues(_+1).toMap === a.toMap.mapValues(_+1))
-  }
+      prop((a: NonEmptyMap[Int,Int]) => a.mapValues(_+1).toMap === a.toMap.mapValues(_+1))
+    }
+    .contains ${ prop((m: NonEmptyMap[Int,String], a: Int) => m.contains(a) === m.toMap.contains(a)) }
+    .get ${ prop((m: NonEmptyMap[Int,String], a: Int) => m.get(a) === m.toMap.get(a)) }
+    .size ${ prop((m: NonEmptyMap[Int,String]) => m.size === m.toMap.size) }
+
   }
   """
 }
