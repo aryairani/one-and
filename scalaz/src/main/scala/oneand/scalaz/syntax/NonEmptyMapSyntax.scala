@@ -24,7 +24,7 @@ trait NonEmptyMapSyntax {
 
   /** scalaz-related static methods for NonEmptyMap */
   implicit class NonEmptyMapCompanionOps(c: NonEmptyMap.type) {
-    def apply[F[_] : Foldable1, K, V](fa: F[(K, V)]): NonEmptyMap[K, V] =
+    def fromFoldable1[F[_] : Foldable1, K, V](fa: F[(K, V)]): NonEmptyMap[K, V] =
       fa.foldMapLeft1[NonEmptyMap[K, V]](c.apply(_))(_ + _)
   }
 }
