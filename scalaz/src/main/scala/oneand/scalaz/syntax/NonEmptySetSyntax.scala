@@ -20,7 +20,7 @@ trait NonEmptySetSyntax {
 
   /** scalaz-related static methods for NonEmptySet */
   implicit class NonEmptySetCompanionOps(c: NonEmptySet.type) {
-    def apply[F[_] : Foldable1, A](fa: F[A]): NonEmptySet[A] =
+    def fromFoldable1[F[_] : Foldable1, A](fa: F[A]): NonEmptySet[A] =
       fa.foldMapLeft1[NonEmptySet[A]](c.apply(_))(_ + _)
   }
 }
