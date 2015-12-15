@@ -3,12 +3,22 @@ lazy val root = project
   .aggregate(core, scalaz, argonaut)
   .settings(publishArtifact := false)
   .settings(publishSettings: _*)
+  .settings(mimaSettings: _*)
 
 lazy val core = project
   .settings(commonSettings: _*)
   .settings(name := "oneand-core")
 
-//lazy val cats = project
+lazy val cats = project
+  .dependsOn(core % "compile->compile;test->test")
+  .settings(commonSettings: _*)
+  .settings(name := "oneand-cats")
+  .settings(
+    // scalaz
+    libraryDependencies += "org.spire-math" %% "cats-macros" % "0.3.0",
+    libraryDependencies += "org.spire-math" %% "cats-core" % "0.3.0",
+    libraryDependencies += "org.spire-math" %% "cats-laws" % "0.3.0" % "test"
+  )
 
 lazy val scalaz = project
   .dependsOn(core % "compile->compile;test->test")
@@ -34,15 +44,18 @@ def specs2 = Seq(
   scalacOptions in Test ++= Seq("-Yrangepos")
 )
 
+lazy val currentVersion = "0.1.1-SNAPSHOT"
+lazy val previousVersion = "0.1"
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
-  version := "0.1",
-  organization := "net.arya",
+  version := currentVersion,
   scalacOptions ++= Seq("-feature","-language:higherKinds"),
   addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.7.1")
-) ++ publishSettings ++ specs2
+) ++ publishSettings ++ specs2 ++ mimaSettings
 
 lazy val publishSettings = Seq(
+  organization := "net.arya",
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -64,4 +77,20 @@ lazy val publishSettings = Seq(
       </developers>),
   licenses := Seq("MIT-style" -> url("http://opensource.org/licenses/MIT")),
   homepage := Some(url("https://github.com/refried/oneand"))
+)
+
+
+import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
+import com.typesafe.tools.mima.plugin.MimaKeys._
+lazy val mimaSettings = mimaDefaultSettings ++ Seq(
+  previousArtifact <<= (version, organization, scalaBinaryVersion, moduleName)(
+    (ver, org, binVer, mod) =>
+      Some(org % s"${mod}_${binVer}" % previousVersion)
+  ),
+  binaryIssueFilters ++= {
+    import com.typesafe.tools.mima.core._
+    import com.typesafe.tools.mima.core.ProblemFilters._
+    Seq(
+    )
+  }
 )

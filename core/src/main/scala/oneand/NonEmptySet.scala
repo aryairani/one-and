@@ -27,6 +27,11 @@ class NonEmptySet[A] private[oneand](raw: Set[A]) {
   def flatMap[B](f: A => NonEmptySet[B]): NonEmptySet[B] =
     new NonEmptySet(raw flatMap (f andThen (_.toSet)))
 
+  def forall(p: A => Boolean): Boolean = raw.forall(p)
+  def exists(p: A => Boolean): Boolean = raw.exists(p)
+  def filter(p: A => Boolean): Set[A] = raw.filter(p)
+  def filterNot(p: A => Boolean): Set[A] = raw.filterNot(p)
+
   def foldLeft[B](z: B)(f: (B, A) => B): B = raw.foldLeft(z)(f)
   def foldMapRight1[B](z: A => B)(f: (A, => B) => B): B = {
     val reversed = toList.reverse
@@ -42,4 +47,8 @@ class NonEmptySet[A] private[oneand](raw: Set[A]) {
 object NonEmptySet {
   def apply[A](one: A, others: A*): NonEmptySet[A] =
     new NonEmptySet[A](Set(others: _*) + one)
+
+  def fromSet[A](s: Set[A]): Option[NonEmptySet[A]] =
+    if (s.isEmpty) None
+    else Some(new NonEmptySet(s))
 }

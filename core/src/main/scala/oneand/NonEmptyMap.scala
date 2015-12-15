@@ -6,6 +6,7 @@ class NonEmptyMap[K,V] private[oneand](raw: Map[K,V]) {
 
   def get(k: K): Option[V] = raw.get(k)
   def head: (K,V) = raw.head
+  def tail: Map[K,V] = raw.tail
   def size: Int = raw.size
 
   /** Remove an element from the map. Returns None if the removed element was the only one. */
@@ -23,9 +24,10 @@ class NonEmptyMap[K,V] private[oneand](raw: Map[K,V]) {
 
   def contains(k: K): Boolean = raw.contains(k)
 
-  def forall(p: ((K, V)) => Boolean) = raw.forall(p)
-  def exists(p: ((K, V)) => Boolean) = raw.exists(p)
-  def filter(p: ((K, V)) => Boolean) = raw.filter(p)
+  def forall(p: ((K, V)) => Boolean): Boolean = raw.forall(p)
+  def exists(p: ((K, V)) => Boolean): Boolean = raw.exists(p)
+  def filter(p: ((K, V)) => Boolean): Map[K,V] = raw.filter(p)
+  def filterNot(p: ((K, V)) => Boolean): Map[K,V] = raw.filterNot(p)
 
   def foldLeft[B](z: B)(f: (B, (K, V)) => B): B = raw.foldLeft(z)(f)
 
@@ -35,11 +37,14 @@ class NonEmptyMap[K,V] private[oneand](raw: Map[K,V]) {
   def toMap: Map[K, V] = raw
   def toList: List[(K, V)] = raw.toList
 
-  override def toString: String =
-    raw.mkString("NonEmptyMap(", ",", ")")
+  override def toString: String = raw.mkString("NonEmptyMap(", ",", ")")
 }
 
 object NonEmptyMap {
   def apply[K, V](one: (K, V), thats: (K, V)*): NonEmptyMap[K, V] =
     new NonEmptyMap[K, V](Map(thats: _*) + one)
+
+  def fromMap[K,V](m: Map[K,V]): Option[NonEmptyMap[K,V]] =
+    if (m.isEmpty) None
+    else Some(new NonEmptyMap(m))
 }
