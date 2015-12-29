@@ -1,4 +1,5 @@
-package oneand.scalaz
+package oneand
+package scalaz
 
 import oneand.NonEmptySet
 

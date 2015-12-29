@@ -1,9 +1,6 @@
-package oneand.scalaz
-
-import oneand.NonEmptyMap
+package oneand
 
 import org.scalacheck.{Arbitrary, Gen}
-import org.specs2.{ScalaCheck, Specification}
 import org.specs2.{Specification, ScalaCheck}
 
 class NonEmptyMapSpec extends Specification with ScalaCheck {

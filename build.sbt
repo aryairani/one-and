@@ -1,6 +1,6 @@
 lazy val root = project
   .in(file("."))
-  .aggregate(core, scalaz, argonaut)
+  .aggregate(core, scalaz, argonaut, cats)
   .settings(publishArtifact := false)
   .settings(publishSettings: _*)
   .settings(mimaSettings: _*)
