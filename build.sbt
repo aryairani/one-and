@@ -1,27 +1,31 @@
 lazy val root = project
   .in(file("."))
-  .aggregate(core, scalaz, argonaut, cats)
+  .aggregate(core.jvm, core.js, scalaz, argonaut, cats.jvm, cats.js)
   .settings(publishArtifact := false)
   .settings(publishSettings: _*)
   .settings(mimaSettings: _*)
 
-lazy val core = project
+lazy val core = crossProject.crossType(CrossType.Pure)
   .settings(commonSettings: _*)
   .settings(name := "oneand-core")
+lazy val coreJVM = core.jvm
+lazy val coreJS = core.js
 
-lazy val cats = project
+lazy val cats = crossProject.crossType(CrossType.Pure)
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings: _*)
   .settings(name := "oneand-cats")
   .settings(
     // scalaz
-    libraryDependencies += "org.spire-math" %% "cats-macros" % "0.3.0",
-    libraryDependencies += "org.spire-math" %% "cats-core" % "0.3.0",
-    libraryDependencies += "org.spire-math" %% "cats-laws" % "0.3.0" % "test"
+    libraryDependencies += "org.spire-math" %%% "cats-macros" % "0.3.0",
+    libraryDependencies += "org.spire-math" %%% "cats-core" % "0.3.0",
+    libraryDependencies += "org.spire-math" %%% "cats-laws" % "0.3.0" % "test"
   )
+lazy val catsJVM = cats.jvm
+lazy val catsJS = cats.js
 
 lazy val scalaz = project
-  .dependsOn(core % "compile->compile;test->test")
+  .dependsOn(core.jvm % "compile->compile;test->test")
   .settings(commonSettings: _*)
   .settings(name := "oneand-scalaz")
   .settings(
