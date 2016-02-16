@@ -1,7 +1,5 @@
 package oneand
 
-import oneand.NonEmptySet
-
 import org.scalacheck.{Arbitrary, Gen}
 import org.specs2.{ScalaCheck, Specification}
 
